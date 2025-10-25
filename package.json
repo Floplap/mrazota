@@ -1,0 +1,16 @@
+{
+  "name": "mrazota",
+  "version": "1.0.0",
+  "description": "Проект: mrazota.net — стартовый скелет (frontend + backend)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint:all": "npm --prefix mrazota-site run lint"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "pg": "^8.16.3"
+  }
+}
