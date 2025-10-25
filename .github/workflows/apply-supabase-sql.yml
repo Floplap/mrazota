@@ -9,10 +9,10 @@ jobs:
     name: Apply infra/supabase_schema.sql to Supabase
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v3
         with:
           node-version: '18'
       - name: Install dependencies (pg)
@@ -59,7 +59,7 @@ jobs:
 
       - name: Upload logs artifacts
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v3
         with:
           name: apply-sql-logs
           path: |
