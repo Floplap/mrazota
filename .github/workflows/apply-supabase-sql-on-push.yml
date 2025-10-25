@@ -1,0 +1,69 @@
+name: Apply Supabase SQL on push
+
+on:
+  push:
+    branches:
+      - 'apply-sql'
+  workflow_dispatch: {}
+
+jobs:
+  apply-sql:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: |
+          npm ci --no-audit --no-fund || true
+          npm install pg --no-audit --no-fund --no-save
+
+      - name: Diagnostics and run applier (logs)
+        env:
+          DATABASE_URL: ${{ secrets.SUPABASE_DATABASE_URL }}
+        run: |
+          echo "Running diagnostics and applier"
+          mkdir -p logs || true
+          echo "--- DIAGNOSTICS START ---" > logs/diagnostics.log
+          HOST=$(node -e "try{const u=new URL(process.env.DATABASE_URL); console.log(u.hostname);}catch(e){console.error('PARSE_ERROR',e.message); process.exit(2)}")
+          echo "Host: $HOST" | tee -a logs/diagnostics.log
+          echo '--- nslookup ---' | tee -a logs/diagnostics.log
+          nslookup $HOST 2>&1 | tee -a logs/diagnostics.log || true
+          echo '--- node lookup ---' | tee -a logs/diagnostics.log
+          node -e "require('dns').promises.lookup(process.argv[1]).then(r=>console.log(r)).catch(e=>{console.error('DNS_ERR',e.message);process.exit(2)})" $HOST 2>&1 | tee -a logs/diagnostics.log || true
+          echo '--- TCP connect (node) ---' | tee -a logs/diagnostics.log
+          node -e "(async()=>{const net=require('net');const h=process.argv[1],p=+process.argv[2];const s=new net.Socket();s.setTimeout(8000);s.on('connect',()=>{console.log('TCP OK');s.destroy();process.exit(0)});s.on('error',e=>{console.error('TCP_ERR',e.message);process.exit(2)});s.on('timeout',()=>{console.error('TCP_TIMEOUT');process.exit(3)});s.connect(p,h);})()" $HOST 5432 2>&1 | tee -a logs/diagnostics.log || true
+          echo "--- DIAGNOSTICS END ---" >> logs/diagnostics.log
+          echo '--- Running applier ---'
+          ATTEMPT=1
+          MAX=3
+          while [ $ATTEMPT -le $MAX ]; do
+            echo "Attempt $ATTEMPT" | tee -a logs/apply-sql.log
+            node ./scripts/apply-sql-node.js >> logs/apply-sql.log 2>&1 && break
+            echo "Attempt $ATTEMPT failed" | tee -a logs/apply-sql.log
+            ATTEMPT=$((ATTEMPT+1))
+            sleep $((ATTEMPT * 5))
+          done
+          if [ $ATTEMPT -gt $MAX ]; then
+            echo 'apply-sql-node.js failed after retries' | tee -a logs/apply-sql.log
+            exit 2
+          fi
+
+      - name: Upload logs artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: apply-sql-logs
+          path: |
+            logs/apply-sql.log
+            logs/diagnostics.log
+
+      - name: Finished
+        if: ${{ success() }}
+        run: |
+          echo 'Done: SQL applier job finished successfully.'
