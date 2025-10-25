@@ -1,0 +1,8 @@
+node_modules
+deploy_package_ignored/
+.env.local
+.env
+.env.*.local
+.next/
+frontend/dist/
+tmp_node_modules/
