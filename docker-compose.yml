@@ -1,0 +1,32 @@
+version: '3.8'
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: mrazota-backend:latest
+    ports:
+      - "5000:5000"
+    env_file:
+      - ./deploy.env
+    restart: unless-stopped
+    depends_on:
+      - db_placeholder
+
+  web:
+    build:
+      context: ./mrazota-site
+      dockerfile: Dockerfile
+    image: mrazota-site:latest
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./deploy.env
+    restart: unless-stopped
+
+  # Placeholder DB service if you run a local DB - Supabase is external so this is optional.
+  db_placeholder:
+    image: busybox
+    command: tail -f /dev/null
+
+networks: {}

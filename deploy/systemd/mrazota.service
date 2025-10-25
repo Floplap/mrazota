@@ -1,0 +1,14 @@
+[Unit]
+Description=Mrazota Docker Compose Service
+After=docker.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+WorkingDirectory=/opt/mrazota
+ExecStart=/usr/bin/docker compose --env-file /opt/mrazota/deploy.env up -d --build
+ExecStop=/usr/bin/docker compose --env-file /opt/mrazota/deploy.env down
+TimeoutStartSec=600
+
+[Install]
+WantedBy=multi-user.target

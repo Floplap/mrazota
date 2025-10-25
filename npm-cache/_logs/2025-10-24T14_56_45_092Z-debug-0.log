@@ -1,0 +1,26 @@
+0 verbose cli C:\Program Files\nodejs\node.exe C:\Program Files\nodejs\node_modules\npm\bin\npm-cli.js
+1 info using npm@10.9.3
+2 info using node@v22.20.0
+3 silly config load:file:C:\Program Files\nodejs\node_modules\npm\npmrc
+4 silly config load:file:C:\MRAZOTA\tmp_node_modules\.npmrc
+5 silly config load:file:C:\Users\user\.npmrc
+6 silly config load:file:C:\MRAZOTA\tmp_node_modules\etc\npmrc
+7 verbose title npm install @supabase/supabase-js
+8 verbose argv "install" "@supabase/supabase-js" "--prefix" ".\\tmp_node_modules" "--cache" ".\\npm-cache" "--no-audit" "--no-fund" "--loglevel" "verbose"
+9 verbose logfile logs-max:10 dir:C:\MRAZOTA\npm-cache\_logs\2025-10-24T14_56_45_092Z-
+10 verbose logfile C:\MRAZOTA\npm-cache\_logs\2025-10-24T14_56_45_092Z-debug-0.log
+11 silly logfile done cleaning log files
+12 silly packumentCache heap:2197815296 maxSize:549453824 maxEntrySize:274726912
+13 silly idealTree buildDeps
+14 silly fetch manifest @supabase/supabase-js@^2.76.1
+15 silly packumentCache full:https://registry.npmjs.org/@supabase%2fsupabase-js cache-miss
+16 http fetch GET 200 https://registry.npmjs.org/@supabase%2fsupabase-js 470ms (cache revalidated)
+17 silly packumentCache full:https://registry.npmjs.org/@supabase%2fsupabase-js set size:2018988 disposed:false
+18 silly placeDep ROOT @supabase/supabase-js@2.76.1 REPLACE for:  want: ^2.76.1
+19 silly reify moves {}
+20 verbose cwd C:\MRAZOTA
+21 verbose os Windows_NT 10.0.26100
+22 verbose node v22.20.0
+23 verbose npm  v10.9.3
+24 verbose exit 0
+25 info ok

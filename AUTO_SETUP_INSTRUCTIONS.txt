@@ -1,0 +1,22 @@
+Automatic setup instructions
+
+1) If you already have SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY and TEST_PROFILE_ID set in your current PowerShell session, run this one-liner from the repo root (C:\MRAZOTA):
+
+# Example (replace placeholders with your real values):
+$env:SUPABASE_URL = 'https://ndlmuwwznqodderoieoh.supabase.co'; $env:SUPABASE_SERVICE_ROLE_KEY = 'eyJ...'; $env:TEST_PROFILE_ID = 'f8362bc9-d0aa-41f9-b02d-4d602515d7f1'; pwsh -ExecutionPolicy Bypass -File .\scripts\complete-setup-all.ps1
+
+2) The script will:
+- create backend/.env from env vars (if present)
+- run npm install in backend and frontend (with local-prefix fallback)
+- try to apply infra/supabase_schema.sql using psql if DATABASE_URL is set and psql available; otherwise copy SQL to clipboard
+- start the backend in the background (npm run start)
+- run upload-test.js to upload a test image and insert a test post (if service role key and TEST_PROFILE_ID are present)
+
+3) If you don't have keys in the current shell, you can set them first like in the example above.
+
+4) After the script finishes, verify:
+- Supabase Storage → Buckets → media (files uploaded)
+- Supabase Table Editor → public → profiles / posts / orders (new records)
+- Backend logs in the terminal where you started the backend if you started it manually
+
+If anything fails, copy the PowerShell output and paste it here and I will parse and fix the scripts.

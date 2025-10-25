@@ -1,0 +1,9 @@
+node_modules
+npm-debug.log
+.env
+deploy.env
+tmp_node_modules
+.git
+logs
+dist
+coverage
