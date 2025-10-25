@@ -16,14 +16,21 @@ module.exports = {
     "frontend-deploy.zip",
     "**/tmp_node_modules/**",
     "**/deploy_package/**",
-    // Ignore per-project source dirs to avoid parsing errors from missing parsers/plugins
+    "**/deploy_package_ignored/**",
+    // Ignore project source dirs at repo root — let per-package ESLint handle them
     "frontend/**",
     "mrazota-site/**",
+    "backend/**",
   ],
   languageOptions: {
     ecmaVersion: 2021,
     sourceType: "module",
   },
+  // Keep this repo-level config minimal and only ignore generated folders.
+  // Per-package ESLint (inside `mrazota-site`, `frontend`, `backend`) will
+  // manage project-specific parser/plugins. Removing `files` prevents the
+  // root config from attempting to parse TSX/TS files without access to
+  // package-local parsers/plugins which caused parsing errors in CI.
   // keep rules empty to avoid surfacing unrelated issues during initial CI recovery
   rules: {},
 };

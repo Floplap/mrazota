@@ -1,6 +1,11 @@
 node_modules/
 **/.next/
 deploy_package/
+deploy_package_ignored/
+deploy_package_ignored/**
+frontend/
+mrazota-site/
+backend/
 frontend/dist/
 fullstack-deploy.zip
 frontend-deploy.zip
