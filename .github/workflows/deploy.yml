@@ -1,0 +1,37 @@
+name: Deploy to Server (manual)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install rsync
+        run: sudo apt-get update && sudo apt-get install -y rsync
+
+      - name: Copy files to server via rsync
+        uses: burnett01/rsync-deployments@v4
+        with:
+          switches: -avz --delete
+          path: .
+          remote_path: ${{ secrets.REMOTE_PATH }}
+          remote_host: ${{ secrets.SSH_HOST }}
+          remote_user: ${{ secrets.SSH_USER }}
+          pre_command: 'mkdir -p ${{ secrets.REMOTE_PATH }}'
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: SSH: run docker compose on remote
+        uses: appleboy/ssh-action@v0.1.9
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+            cd ${{ secrets.REMOTE_PATH }}
+            docker compose --env-file deploy.env pull || true
+            docker compose --env-file deploy.env up -d --build
