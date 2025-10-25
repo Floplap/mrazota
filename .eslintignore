@@ -1,0 +1,10 @@
+node_modules/
+**/.next/
+deploy_package/
+frontend/dist/
+fullstack-deploy.zip
+frontend-deploy.zip
+tmp_node_modules/
+.husky/
+.vscode/
+logs/
