@@ -1,4 +1,14 @@
-node_modules/
+# Ignore generated build/artifact folders so repo-wide ESLint doesn't scan them
+.next
+frontend/dist
+hostinger_package
+hostinger_package.zip
+node_modules
+tmp_node_modules
+frontend/node_modules
+mrazota-site/node_modules
+backend/node_modules
+*.lognode_modules/
 **/.next/
 deploy_package/
 deploy_package_ignored/
