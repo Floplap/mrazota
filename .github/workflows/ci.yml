@@ -1,3 +1,42 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, master, "fix/*", "feat/*" ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18.x]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - name: Install root deps
+        run: npm ci
+
+      - name: Run repo lint (per-package)
+        run: npm run lint:ci
+
+      - name: Build frontend
+        run: npm --prefix frontend ci && npm --prefix frontend run build
+
+      - name: Typecheck + Build mrazota-site
+        run: npm --prefix mrazota-site ci && npm --prefix mrazota-site run build
+
+      - name: Run tests
+        run: npm --prefix mrazota-site ci && npm --prefix mrazota-site run test
 name: CI - Build & Push Docker Images
 
 on:
