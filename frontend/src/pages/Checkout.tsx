@@ -15,7 +15,7 @@ export default function Checkout({ onDone }: { onDone?: () => void }) {
       try {
         const { data } = await supabase.auth.getUser()
         setUserId(data?.user?.id || null)
-      } catch (e) {
+      } catch {
         setUserId(null)
       }
     })()

@@ -25,11 +25,11 @@ export default function Media() {
 
   const upload = async () => {
     if (!file) return alert('Choose a file first')
-    try {
-      const fileExt = file.name.split('.').pop()
-      const fileName = `${Date.now()}.${fileExt}`
-      const { data: uploadData, error: uploadError } = await supabase.storage.from('media').upload(fileName, file, { cacheControl: '3600', upsert: false })
-      if (uploadError) throw uploadError
+      try {
+        const fileExt = file.name.split('.').pop()
+        const fileName = `${Date.now()}.${fileExt}`
+        const { error: uploadError } = await supabase.storage.from('media').upload(fileName, file, { cacheControl: '3600', upsert: false })
+        if (uploadError) throw uploadError
       // create public URL
       const { data: urlData } = supabase.storage.from('media').getPublicUrl(fileName)
       const mediaUrl = urlData.publicUrl

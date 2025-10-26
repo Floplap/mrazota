@@ -21,7 +21,7 @@ export default function Feed() {
 
     return () => {
       mounted = false
-      try { supabase.removeChannel(channel) } catch (e) {}
+      try { supabase.removeChannel(channel) } catch { }
     }
   }, [])
 

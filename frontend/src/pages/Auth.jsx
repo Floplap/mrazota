@@ -9,7 +9,7 @@ export default function Auth() {
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
-    const session = supabase.auth.getSession().then(r => setUser(r.data?.session?.user ?? null))
+    supabase.auth.getSession().then(r => setUser(r.data?.session?.user ?? null))
     const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null)
     })

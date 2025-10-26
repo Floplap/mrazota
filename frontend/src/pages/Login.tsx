@@ -7,13 +7,13 @@ export default function Login({ onSuccess }: { onSuccess?: () => void }) {
   const [msg, setMsg] = useState<string | null>(null)
 
   const signUp = async () => {
-    const { data, error } = await supabase.auth.signUp({ email, password })
+    const { error } = await supabase.auth.signUp({ email, password })
     if (error) setMsg(error.message)
     else setMsg('Check your email to confirm or logged in')
   }
 
   const signIn = async () => {
-    const { data, error } = await supabase.auth.signInWithPassword({ email, password })
+    const { error } = await supabase.auth.signInWithPassword({ email, password })
     if (error) setMsg(error.message)
     else {
       setMsg('Signed in')

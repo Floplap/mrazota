@@ -9,11 +9,11 @@ export function useCart() {
     try {
       const raw = localStorage.getItem(CART_KEY)
       if (raw) setItems(JSON.parse(raw))
-    } catch (e) { /* ignore */ }
+    } catch { /* ignore */ }
   }, [])
 
   useEffect(() => {
-    try { localStorage.setItem(CART_KEY, JSON.stringify(items)) } catch (e) {}
+    try { localStorage.setItem(CART_KEY, JSON.stringify(items)) } catch { }
   }, [items])
 
   function add(item) {

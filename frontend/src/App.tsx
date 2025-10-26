@@ -4,8 +4,6 @@ import Feed from './pages/Feed'
 import Products from './pages/Products'
 import Checkout from './pages/Checkout'
 
-const routes = ['/', '/login', '/feed', '/products', '/checkout']
-
 export default function App() {
   const [route, setRoute] = useState(window.location.pathname || '/')
 
