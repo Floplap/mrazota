@@ -71,3 +71,8 @@ sudo systemctl status mrazota.service
 ```
 
 This will ensure your Docker Compose stack starts on boot and can be managed with systemd.
+
+Hostinger package
+------------------
+
+I created a convenience package `hostinger_package.zip` (at the repository root) which contains the `frontend/dist` static build, the `mrazota-site/.next` Next build, and minimal `package.json`/`backend/src` for the server API. Use `README_HOSTINGER_DEPLOY.md` (also at repo root) for quick deployment notes for Hostinger.
