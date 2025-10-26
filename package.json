@@ -4,8 +4,9 @@
   "description": "Проект: mrazota.net — стартовый скелет (frontend + backend)",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "lint:all": "npm --prefix mrazota-site run lint"
+  "test": "echo \"Error: no test specified\" && exit 1",
+  "lint:all": "npm --prefix mrazota-site run lint",
+  "lint:ci": "npm --prefix frontend run lint --silent || exit 1; npm --prefix mrazota-site run lint --silent || exit 1; npm --prefix backend run lint --silent || exit 1"
   },
   "keywords": [],
   "author": "",

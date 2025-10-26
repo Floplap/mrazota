@@ -6,7 +6,8 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "start": "vite preview"
+    "start": "vite preview",
+    "lint": "npx eslint src --ext .ts,.tsx,.js,.jsx --max-warnings=0"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.29.0",
