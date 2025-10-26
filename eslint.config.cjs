@@ -17,10 +17,10 @@ module.exports = {
     "**/tmp_node_modules/**",
     "**/deploy_package/**",
     "**/deploy_package_ignored/**",
-    // Ignore project source dirs at repo root — let per-package ESLint handle them
-    "frontend/**",
-    "mrazota-site/**",
-    "backend/**",
+  // Keep generated/build folders ignored. Do NOT ignore package source folders
+  // at repo root – we want repo-level runs to pick up package configs or at
+  // least report real source issues. Per-package ESLint should still be the
+  // primary authority for project-specific rules and parsers.
   ],
   languageOptions: {
     ecmaVersion: 2021,
