@@ -1,5 +1,6 @@
 # Ignore generated build/artifact folders so repo-wide ESLint doesn't scan them
 .next
+**/.next/**
 frontend/dist
 hostinger_package
 hostinger_package.zip
