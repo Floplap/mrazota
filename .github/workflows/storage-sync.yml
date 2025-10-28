@@ -1,0 +1,98 @@
+name: Storage Sync — hourly
+on:
+  schedule:
+    - cron: 
+'0 * * * *'
+ 
+# каждый час
+
+  workflow_dispatch: {} 
+# ручной запуск
+
+jobs
+:
+  call-storage-sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call storage-sync Edge Function
+        env:
+          SUPABASE_SERVICE_ROLE_KEY: 
+${{ secrets.SUPABASE_SERVICE_ROLE_KEY }
+}
+        run: |
+          
+if
+ [ -z 
+"
+${SUPABASE_SERVICE_ROLE_KEY}
+"
+ ]; 
+then
+
+            
+echo
+ 
+"SUPABASE_SERVICE_ROLE_KEY is not set in repository secrets"
+
+            
+exit
+ 1
+          
+fi
+
+          PROJECT_REF=
+"ndlmuwwznqodderoieoh"
+
+          RESP=$(curl -sS -X POST 
+"https://
+${PROJECT_REF}
+.functions.supabase.co/storage-sync"
+ \
+            -H 
+"Authorization: Bearer 
+${SUPABASE_SERVICE_ROLE_KEY}
+"
+ \
+            -H 
+"Content-Type: application/json"
+ \
+            --fail || 
+true
+)
+          STATUS=$?
+          
+if
+ [ 
+$STATUS
+ -ne 0 ]; 
+then
+
+            
+echo
+ 
+"Request failed"
+
+            
+echo
+ 
+"
+$RESP
+"
+
+            
+exit
+ 1
+          
+fi
+
+          
+echo
+ 
+"Function response:"
+
+          
+echo
+ 
+"
+$RESP
+"
