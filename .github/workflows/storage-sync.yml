@@ -1,14 +1,10 @@
-name: Storage Sync — hourly
+name: Storage Sync - hourly
 on:
   schedule:
     - cron: 
 '0 * * * *'
- 
-# каждый час
 
-  workflow_dispatch: {} 
-# ручной запуск
-
+  workflow_dispatch: {}
 jobs
 :
   call-storage-sync:
