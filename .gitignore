@@ -1,0 +1,22 @@
+node_modules
+# Ignore large backups and build artifacts
+backup_before_fix/
+backup-before-full-migration/
+backup_*/
+*mrazota-site-backup-*
+deploy-ready/
+deploy-ready.zip
+hostinger_package/
+legacy_old_site/dist/
+backup*/
+tmp_node_modules/
+.tmp*
+.npm/
+npm-debug.log
+package-lock.json
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+*.log
+.DS_Store
