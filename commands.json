@@ -1,0 +1,28 @@
+{
+    "open browser": {
+        "type": "builtin",
+        "action": "open_browser"
+    },
+    "open google": {
+        "type": "builtin",
+        "action": "open_url",
+        "args": [
+            "https://www.google.com"
+        ]
+    },
+    "open youtube": {
+        "type": "builtin",
+        "action": "open_url",
+        "args": [
+            "https://www.youtube.com"
+        ]
+    },
+    "launch steam": {
+        "type": "shell",
+        "action": "start steam"
+    },
+    "open discord": {
+        "type": "shell",
+        "action": "start discord"
+    }
+}
