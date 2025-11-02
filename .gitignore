@@ -1,8 +1,3 @@
 ﻿node_modules
 # Deployment archives (local, large) ΓÇö do not commit
 hostinger_deploy/*.zip
-# Local backup and temporary directories
-hostinger_deploy/full_pack_tmp/
-mrazota-site-backup-*/
-worktrees/
-ai_merge/old_site_source/

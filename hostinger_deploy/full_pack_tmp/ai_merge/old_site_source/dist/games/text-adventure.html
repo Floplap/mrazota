@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text Adventure Game</title>
+    <style>
+        body { font-family: 'Courier New', Courier, monospace; background-color: transparent; color: #0f0; margin: 0; padding: 20px; display: flex; align-items: center; justify-content: center; min-height: 100vh; box-sizing: border-box;}
+        .container { max-width: 800px; width: 100%; margin: 0 auto; padding: 20px; border: 1px solid #0f0; background-color: #111; box-sizing: border-box; }
+        #output { white-space: pre-wrap; min-height: 150px; line-height: 1.5; }
+        #input-container { display: flex; margin-top: 10px; }
+        #input { flex-grow: 1; background: #222; color: #0f0; border: 1px solid #0f0; padding: 10px; font-family: inherit; font-size: 1rem; }
+        #input:focus { outline: none; border-color: #3f3; }
+        button { background: #222; color: #0f0; border: 1px solid #0f0; padding: 10px 15px; cursor: pointer; margin-left: 5px; font-size: 1rem; }
+        button:hover { background: #333; }
+        h1 { color: #0f0; margin-top: 0;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Text Adventure</h1>
+        <div id="output"></div>
+        <div id="input-container">
+            <input type="text" id="input" placeholder="Type your command...">
+            <button onclick="processInput()">Enter</button>
+        </div>
+    </div>
+
+    <script>
+        const outputElement = document.getElementById('output');
+        const inputElement = document.getElementById('input');
+
+        const gameData = {
+            start: {
+                text: "You are in a dark, dusty room. There is a wooden door to the north and a small chest in the corner.\nWhat do you do? (Commands: go north, open chest, look)",
+                actions: {
+                    "go north": "door",
+                    "open chest": "chest",
+                    "look": "You see a heavy wooden door and a small, unlocked chest. The air is thick with dust."
+                }
+            },
+            door: {
+                text: "The door is locked. It requires a key.",
+                actions: {
+                    "go south": "start",
+                    "look": "It's a sturdy wooden door with a large iron lock."
+                }
+            },
+            chest: {
+                text: "You open the chest. Inside, you find a single, rusty key.",
+                actions: {
+                    "take key": "key_taken",
+                    "go south": "start"
+                }
+            },
+            key_taken: {
+                text: "You have the key. The door to the north is your only way out.",
+                actions: {
+                    "use key on door": "door_unlocked",
+                    "go north": "door_unlocked",
+                    "look": "You are holding a rusty key. It feels heavy."
+                }
+            },
+            door_unlocked: {
+                text: "You slide the key into the lock. It turns with a loud *click*. The door creaks open, revealing a path to freedom. You have escaped!\n\nTHE END.",
+                actions: {}
+            }
+        };
+
+        let currentState = 'start';
+        let inventory = [];
+
+        function render() {
+            const scene = gameData[currentState];
+            outputElement.textContent = scene.text;
+        }
+
+        function processInput() {
+            const command = inputElement.value.toLowerCase().trim();
+            const scene = gameData[currentState];
+            let response = "";
+
+            if (command === "take key" && currentState === "chest") {
+                inventory.push("key");
+                currentState = "key_taken";
+            } else if ((command === "go north" || command === "use key on door") && currentState === "key_taken" && inventory.includes("key")) {
+                 currentState = "door_unlocked";
+            } else if (scene.actions[command]) {
+                const nextState = scene.actions[command];
+                if (typeof nextState === 'string' && gameData[nextState]) {
+                    currentState = nextState;
+                } else if (typeof nextState === 'string') {
+                    response = nextState;
+                }
+            } else {
+                response = "I don't understand that command.";
+            }
+            
+            inputElement.value = '';
+            render();
+            if(response) {
+                outputElement.textContent += "\n\n" + response;
+            }
+        }
+        
+        inputElement.addEventListener('keyup', function(event) {
+            if (event.key === 'Enter') {
+                processInput();
+            }
+        });
+
+        window.onload = render;
+    </script>
+</body>
+</html>
