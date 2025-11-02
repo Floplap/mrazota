@@ -1,0 +1,56 @@
+name: Build and Deploy to Hostinger (FTP)
+
+on:
+  push:
+    branches: [ main, ai/auto-fixes, ai/auto-fixes-clean ]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build (production)
+        run: npm run build --if-present
+
+      - name: Prepare upload directory
+        run: |
+          rm -rf upload
+          mkdir -p upload
+          # Copy only what the server needs; Hostinger will run `npm ci` and build there if desired.
+          cp package.json upload/
+          cp -R public upload/ || true
+          cp -R .next upload/ || true
+          cp -R next.config.js upload/ || true
+          cp -R prisma upload/ || true
+          cp -R hostinger_deploy upload/ || true
+
+      - name: List upload contents
+        run: ls -la upload || true
+
+      - name: Deploy via FTP
+        uses: SamKirkland/FTP-Deploy-Action@4.4.0
+        with:
+          server: ${{ secrets.HOSTINGER_FTP_HOST }}
+          username: ${{ secrets.HOSTINGER_FTP_USER }}
+          password: ${{ secrets.HOSTINGER_FTP_PASSWORD }}
+          local-dir: upload
+          server-dir: ${{ secrets.HOSTINGER_FTP_PATH }}
+          # Exclude things we don't want on the server
+          exclude: |
+            .git*
+            node_modules
+            **/*.log
+            **/*.zip
+
+      - name: Notify
+        run: echo "Deployment to Hostinger (via FTP) finished. Check Hostinger hPanel and server logs."
