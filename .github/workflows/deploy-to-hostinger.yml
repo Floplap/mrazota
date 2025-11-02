@@ -16,22 +16,25 @@ jobs:
         with:
           node-version: 18
 
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Build (production)
-        run: npm run build --if-present
+      - name: Install & build site (mrazota-site)
+        run: |
+          cd mrazota-site
+          npm ci
+          # generate prisma client if used
+          if [ -f node_modules/.bin/prisma ]; then npx prisma generate || true; fi
+          npm run build
 
       - name: Prepare upload directory
         run: |
           rm -rf upload
           mkdir -p upload
-          # Copy only what the server needs; Hostinger will run `npm ci` and build there if desired.
-          cp package.json upload/
-          cp -R public upload/ || true
-          cp -R .next upload/ || true
-          cp -R next.config.js upload/ || true
-          cp -R prisma upload/ || true
+          # Copy the built site and necessary files. Hostinger will run `npm ci` if needed.
+          cp -R mrazota-site/.next upload/ || true
+          cp mrazota-site/package.json upload/ || true
+          cp mrazota-site/package-lock.json upload/ || true
+          cp -R mrazota-site/public upload/ || true
+          cp mrazota-site/next.config.js upload/ || true
+          cp -R mrazota-site/prisma upload/ || true
           cp -R hostinger_deploy upload/ || true
 
       - name: List upload contents
@@ -45,7 +48,6 @@ jobs:
           password: ${{ secrets.HOSTINGER_FTP_PASSWORD }}
           local-dir: upload
           server-dir: ${{ secrets.HOSTINGER_FTP_PATH }}
-          # Exclude things we don't want on the server
           exclude: |
             .git*
             node_modules
