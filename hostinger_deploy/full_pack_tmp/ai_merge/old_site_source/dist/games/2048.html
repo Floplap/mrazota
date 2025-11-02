@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>2048</title>
+    <style>
+        :root { font-size: 16px; }
+        html, body { height: 100%; margin: 0; padding: 0; }
+        body { font-family: Arial, sans-serif; text-align: center; background: transparent; color: #fff; margin: 0; padding: 1rem; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; justify-content: center; overflow: hidden;}
+        .container { width: 100%; max-width: 400px; }
+        h1 { font-size: 1.5rem; margin-bottom: 0.5rem; }
+        p { font-size: 1rem; margin-top: 0; }
+        #grid-container { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; background: #333; padding: 10px; border-radius: 6px; width: 100%; margin: 1rem auto; aspect-ratio: 1/1;}
+        .grid-cell { background: #555; border-radius: 3px; aspect-ratio: 1/1; display: flex; justify-content: center; align-items: center; font-size: clamp(1rem, 6vw, 2.5rem); font-weight: bold; }
+        button { background: #555; border: 1px solid #777; color: #fff; padding: 0.5rem 1rem; border-radius: 5px; cursor: pointer; font-size: 1rem;}
+        .tile-2 { background: #eee4da; color: #776e65; } .tile-4 { background: #ede0c8; color: #776e65; }
+        .tile-8 { background: #f2b179; color: #f9f6f2; } .tile-16 { background: #f59563; color: #f9f6f2; }
+        .tile-32 { background: #f67c5f; color: #f9f6f2; } .tile-64 { background: #f65e3b; color: #f9f6f2; }
+        .tile-128 { background: #edcf72; color: #f9f6f2; } .tile-256 { background: #edcc61; color: #f9f6f2; }
+        .tile-512 { background: #edc850; color: #f9f6f2; } .tile-1024 { background: #edc53f; color: #f9f6f2; }
+        .tile-2048 { background: #edc22e; color: #f9f6f2; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>2048</h1>
+        <p>Score: <span id="score">0</span></p>
+        <div id="grid-container"></div>
+        <button onclick="setupInput()">New Game</button>
+    </div>
+    <script>
+        const gridDisplay = document.getElementById('grid-container');
+        const scoreDisplay = document.getElementById('score');
+        const width = 4;
+        let squares = [];
+        let score = 0;
+        let touchStartX = 0;
+        let touchStartY = 0;
+        let touchEndX = 0;
+        let touchEndY = 0;
+
+        function createBoard() {
+            gridDisplay.innerHTML = '';
+            squares = [];
+            score = 0;
+            scoreDisplay.textContent = 0;
+            for (let i = 0; i < width * width; i++) {
+                const square = document.createElement('div');
+                square.className = 'grid-cell';
+                gridDisplay.appendChild(square);
+                squares.push({ element: square, value: 0 });
+            }
+            generate();
+            generate();
+        }
+
+        function updateBoard() {
+            squares.forEach(sq => {
+                sq.element.textContent = sq.value > 0 ? sq.value : '';
+                sq.element.className = 'grid-cell';
+                if (sq.value > 0) sq.element.classList.add('tile-' + sq.value);
+            });
+        }
+        
+        function generate() {
+            let emptySquares = squares.filter(sq => sq.value === 0);
+            if (emptySquares.length > 0) {
+                let randomSquare = emptySquares[Math.floor(Math.random() * emptySquares.length)];
+                randomSquare.value = Math.random() > 0.1 ? 2 : 4;
+                updateBoard();
+            }
+        }
+        
+        function move(rowOrCol) {
+            let filtered = rowOrCol.filter(sq => sq.value);
+            let empty = Array(width - filtered.length).fill(null).map(() => ({value: 0}));
+            let newArr = empty.concat(filtered);
+            return newArr.map((sq, i) => ({...sq, value: newArr[i].value}));
+        }
+
+        function combine(rowOrCol) {
+            for (let i = width - 1; i > 0; i--) {
+                if(rowOrCol[i].value && rowOrCol[i].value === rowOrCol[i-1].value) {
+                    rowOrCol[i].value *= 2;
+                    rowOrCol[i-1].value = 0;
+                    score += rowOrCol[i].value;
+                    scoreDisplay.textContent = score;
+                }
+            }
+            return rowOrCol;
+        }
+
+        function operate(key) {
+            const originalBoard = JSON.stringify(squares.map(s => s.value));
+
+            for (let i=0; i < width; i++) {
+                let rowOrCol;
+                if (key === 'right' || key === 'left') {
+                    rowOrCol = squares.slice(i * width, i * width + width);
+                } else { // up or down
+                    rowOrCol = Array.from({length: width}, (_, j) => squares[i + j*width]);
+                }
+
+                if (key === 'right' || key === 'down') rowOrCol.reverse();
+                
+                let moved = move(rowOrCol);
+                let combined = combine(moved);
+                let final = move(combined);
+
+                if (key === 'right' || key === 'down') final.reverse();
+
+                if (key === 'right' || key === 'left') {
+                    final.forEach((sq, j) => squares[i*width + j].value = sq.value);
+                } else {
+                    final.forEach((sq, j) => squares[i + j*width].value = sq.value);
+                }
+            }
+            const boardChanged = JSON.stringify(squares.map(s => s.value)) !== originalBoard;
+            if(boardChanged) generate();
+            updateBoard();
+            checkForGameOver();
+        }
+
+        function control(e) {
+            if (e.key === 'ArrowRight') operate('right');
+            else if (e.key === 'ArrowLeft') operate('left');
+            else if (e.key === 'ArrowUp') operate('up');
+            else if (e.key === 'ArrowDown') operate('down');
+        }
+
+        function handleTouchStart(e) {
+            touchStartX = e.changedTouches[0].screenX;
+            touchStartY = e.changedTouches[0].screenY;
+        }
+
+        function handleTouchEnd(e) {
+            touchEndX = e.changedTouches[0].screenX;
+            touchEndY = e.changedTouches[0].screenY;
+            handleGesture();
+        }
+        
+        function handleGesture() {
+            const deltaX = touchEndX - touchStartX;
+            const deltaY = touchEndY - touchStartY;
+            if (Math.abs(deltaX) > Math.abs(deltaY)) { // Horizontal swipe
+                if (deltaX > 50) operate('right');
+                else if (deltaX < -50) operate('left');
+            } else { // Vertical swipe
+                if (deltaY > 50) operate('down');
+                else if (deltaY < -50) operate('up');
+            }
+        }
+
+        function checkForGameOver() {
+             let emptySquares = squares.filter(sq => sq.value === 0).length;
+             if (emptySquares > 0) return;
+             for(let i=0; i<squares.length; i++) {
+                 if((i % width !== width -1) && squares[i].value === squares[i+1].value) return; // check right
+                 if(i < width*width-width && squares[i].value === squares[i+width].value) return; // check down
+             }
+             alert("Game Over! Score: " + score);
+             document.removeEventListener('keyup', control);
+             gridDisplay.removeEventListener('touchstart', handleTouchStart);
+             gridDisplay.removeEventListener('touchend', handleTouchEnd);
+        }
+        
+        function setupInput(){
+            createBoard();
+            document.removeEventListener('keyup', control);
+            document.addEventListener('keyup', control);
+            gridDisplay.addEventListener('touchstart', handleTouchStart, false);
+            gridDisplay.addEventListener('touchend', handleTouchEnd, false);
+        }
+
+        setupInput();
+    </script>
+</body>
+</html>

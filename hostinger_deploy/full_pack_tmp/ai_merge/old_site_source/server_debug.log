@@ -1,0 +1,29 @@
+[2025-10-14T14:13:20.524Z] EARLY POST /api/openai ip=::ffff:127.0.0.1
+[2025-10-14T14:13:20.529Z] /api/openai entered
+[2025-10-14T14:13:20.541Z] incoming ::ffff:127.0.0.1 model=gpt-4o-mini messages=1
+[2025-10-14T14:13:21.987Z] proxy success status=200
+[2025-10-14T14:20:47.179Z] EARLY POST /api/openai ip=::ffff:127.0.0.1
+[2025-10-14T14:20:47.181Z] /api/openai entered
+[2025-10-14T14:20:47.195Z] incoming ::ffff:127.0.0.1 model=gpt-4o-mini messages=1
+[2025-10-14T14:20:48.644Z] proxy success status=200
+[2025-10-14T15:54:02.488Z] EARLY POST /api/openai/async ip=::1
+[2025-10-14T15:54:08.656Z] EARLY GET /api/openai/job/1 ip=::1
+[2025-10-14T15:54:09.675Z] EARLY GET /api/openai/job/1 ip=::1
+[2025-10-14T15:54:10.720Z] EARLY GET /api/openai/job/1 ip=::1
+[2025-10-14T15:54:11.785Z] EARLY GET /api/openai/job/1 ip=::1
+[2025-10-14T15:54:12.853Z] EARLY GET /api/openai/job/1 ip=::1
+[2025-10-14T15:54:13.919Z] EARLY GET /api/openai/job/1 ip=::1
+[2025-10-14T15:54:14.985Z] EARLY GET /api/openai/job/1 ip=::1
+[2025-10-14T15:54:16.052Z] EARLY GET /api/openai/job/1 ip=::1
+[2025-10-14T15:54:52.856Z] EARLY POST /api/openai ip=::1
+[2025-10-14T15:54:52.860Z] /api/openai entered
+[2025-10-14T15:54:52.861Z] incoming ::1 model=undefined messages=1
+[2025-10-14T15:54:53.864Z] proxy success status=200
+[2025-10-14T15:55:06.594Z] EARLY POST /api/openai/async ip=::1
+[2025-10-14T15:55:13.757Z] EARLY GET /api/openai/job/1 ip=::1
+[2025-10-14T17:08:32.723Z] EARLY POST /api/openai ip=::ffff:127.0.0.1
+[2025-10-14T17:08:32.724Z] /api/openai entered
+[2025-10-14T17:08:32.725Z] incoming ::ffff:127.0.0.1 model=gpt-4o-mini messages=1
+[2025-10-14T17:08:33.585Z] proxy success status=200
+[2025-10-14T17:08:33.600Z] EARLY POST /api/openai/async ip=::ffff:127.0.0.1
+[2025-10-14T17:08:34.119Z] EARLY GET /api/openai/job/1 ip=::ffff:127.0.0.1

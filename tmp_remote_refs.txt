@@ -1,0 +1,14 @@
+﻿origin 58ee105276d0a985ab588281f55e1aceb41f0745
+origin/ai/auto-fixes f9d47154e81cd32cdb643a183d688374fab90eac
+origin/ai/auto-fixes-backup-before-clean 2bff8166492fbf13164f7dc3f568b4ebae22022d
+origin/ai/auto-fixes-clean f2bb854c8805187d4730c8de73639c59fbc2f6e5
+origin/chore/migrate-helpers-20251029 e61705d10db9abc7c03b6e98e3cc3c9c204732d8
+origin/chore/migrate-helpers-20251029-2 e0660c523ef4a5c0ad222f62303fceb2b6f667b2
+origin/ci-fix 08d597c8203a39ac019e54822137bc3771f18692
+origin/clean/merge-old-small 818da8ed0571504c738230925bdf21af3122b33b
+origin/fix/mass-fix-20251026-193537 39ac2dc099355156abb3c68ea46499336852d8d7
+origin/main 58ee105276d0a985ab588281f55e1aceb41f0745
+origin/merge/mrazota-old-into-new-20251028-clean 0de4a45e53e9fac0546a856dda347fd8fc4ffdc1
+origin/pr/auto-fixes-all-small c8c61be77fb6a7cdc030f16d26af96fd1fd81dca
+origin/pr/auto-fixes-small-clean 6a29001019f5cab1b3d89005ad6d40f2b7579ad2
+origin/pr/auto-fixes-submodule-small 620863a3ed7ad575c8d90263662d384908dc9e23
