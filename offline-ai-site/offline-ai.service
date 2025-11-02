@@ -1,0 +1,16 @@
+[Unit]
+Description=Offline AI backend
+After=network.target
+
+[Service]
+Type=simple
+User=www-data
+WorkingDirectory=/path/to/offline-ai-site/backend
+ExecStart=/usr/bin/node /path/to/offline-ai-site/backend/server.js
+Restart=on-failure
+LimitNOFILE=65536
+
+[Install]
+WantedBy=multi-user.target
+
+(В README указать: заменить /path/to/offline-ai-site на реальный путь.)

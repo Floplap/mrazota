@@ -1,0 +1,9 @@
+body{background:#0f1720;color:#eef2ff;font-family:Arial,Helvetica,sans-serif;padding:20px}
+#app{max-width:900px;margin:0 auto}
+.chat{min-height:300px;border:1px solid #223;background:#071826;padding:10px;border-radius:6px;overflow:auto}
+.msg{padding:8px;margin:6px;border-radius:6px}
+.msg.user{background:#0b3b53;text-align:right}
+.msg.bot{background:#183d2f;text-align:left}
+.controls{margin-top:12px}
+input[type=text], input[type=file]{width:60%;padding:8px}
+button{padding:8px 12px;margin-left:6px}

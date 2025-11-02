@@ -1,0 +1,16 @@
+## Pages
+- [- MRAZOTA Forum](/post): No description available
+- [- Our Store](/productdetail): No description available
+- [Achievements - MRAZOTA](/gamification): Track your progress, achievements, and rank on MRAZOTA.
+- [Admin Dashboard - MRAZOTA](/admin): Admin dashboard for MRAZOTA platform management.
+- [AI Assistant - MRAZOTA](/aitools): Chat with the MRAZOTA AI Assistant for help and creative ideas.
+- [Arcade - MRAZOTA](/games): Play a collection of fun, classic mini-games directly in your browser on MRAZOTA.
+- [Community Hub - MRAZOTA](/forum): Join the discussion in the MRAZOTA community forum and chat rooms.
+- [Dashboard - MRAZOTA](/dashboard): Your personal dashboard on MRAZOTA.
+- [Login - MRAZOTA](/login): Login to your MRAZOTA account to access your personalized dashboard, AI tools, games, and more.
+- [My Profile - MRAZOTA](/profile): Manage your MRAZOTA profile, update your details, and track your progress.
+- [Payment Successful - MRAZOTA](/success): Your payment was successful. Thank you for your purchase!
+- [Sign Up - MRAZOTA](/signup): Create a MRAZOTA account to join our community and access a universe of creative tools.
+- [Smart Notes - MRAZOTA](/notes): Organize your life with Smart Notes on MRAZOTA.
+- [Store - MRAZOTA](/store): Browse our collection of awesome products.
+- [Welcome to MRAZOTA - Your Creative Hub](/home): MRAZOTA: The ultimate online hub for creativity, AI tools, community, and personal utilities. Fast, intuitive, and visually futuristic.

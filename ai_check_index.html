@@ -1,0 +1,237 @@
+﻿<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mrazota</title>
+    <script type="module" crossorigin src="/assets/index-C4WrPCMH.js"></script>
+		<link rel="stylesheet" crossorigin href="/assets/index-j_5iLnaF.css">
+		<style>
+			/* Avoid external Google Fonts for local/offline testing. Use system fallbacks so UI looks fine
+				 and doesn't fail when DNS/network is limited. */
+			:root { --ui-font: Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; }
+			body { font-family: var(--ui-font); }
+			.font-orbitron { font-family: 'Orbitron', var(--ui-font); }
+		</style>
+		<script type="module">
+window.onerror = (message, source, lineno, colno, errorObj) => {
+	const errorDetails = errorObj ? JSON.stringify({
+		name: errorObj.name,
+		message: errorObj.message,
+		stack: errorObj.stack,
+		source,
+		lineno,
+		colno,
+	}) : null;
+
+	window.parent.postMessage({
+		type: 'horizons-runtime-error',
+		message,
+		error: errorDetails
+	}, '*');
+};
+</script>
+    <script type="module">
+const observer = new MutationObserver((mutations) => {
+	for (const mutation of mutations) {
+		for (const addedNode of mutation.addedNodes) {
+			if (
+				addedNode.nodeType === Node.ELEMENT_NODE &&
+				(
+					addedNode.tagName?.toLowerCase() === 'vite-error-overlay' ||
+					addedNode.classList?.contains('backdrop')
+				)
+			) {
+				handleViteOverlay(addedNode);
+			}
+		}
+	}
+});
+
+observer.observe(document.documentElement, {
+	childList: true,
+	subtree: true
+});
+
+function handleViteOverlay(node) {
+	if (!node.shadowRoot) {
+		return;
+	}
+
+	const backdrop = node.shadowRoot.querySelector('.backdrop');
+
+	if (backdrop) {
+		const overlayHtml = backdrop.outerHTML;
+		const parser = new DOMParser();
+		const doc = parser.parseFromString(overlayHtml, 'text/html');
+		const messageBodyElement = doc.querySelector('.message-body');
+		const fileElement = doc.querySelector('.file');
+		const messageText = messageBodyElement ? messageBodyElement.textContent.trim() : '';
+		const fileText = fileElement ? fileElement.textContent.trim() : '';
+		const error = messageText + (fileText ? ' File:' + fileText : '');
+
+		window.parent.postMessage({
+			type: 'horizons-vite-error',
+			error,
+		}, '*');
+	}
+}
+</script>
+    <script type="module">
+const originalConsoleError = console.error;
+console.error = function(...args) {
+	originalConsoleError.apply(console, args);
+
+	let errorString = '';
+
+	for (let i = 0; i < args.length; i++) {
+		const arg = args[i];
+		if (arg instanceof Error) {
+			errorString = arg.stack || `${arg.name}: ${arg.message}`;
+			break;
+		}
+	}
+
+	if (!errorString) {
+		errorString = args.map(arg => typeof arg === 'object' ? JSON.stringify(arg) : String(arg)).join(' ');
+	}
+
+	window.parent.postMessage({
+		type: 'horizons-console-error',
+		error: errorString
+	}, '*');
+};
+</script>
+    <script type="module">
+const originalFetch = window.fetch;
+window.fetch = function(...args) {
+	const url = args[0] instanceof Request ? args[0].url : args[0];
+
+	// Skip WebSocket URLs
+	if (url.startsWith('ws:') || url.startsWith('wss:')) {
+		return originalFetch.apply(this, args);
+	}
+
+	// Quick local mock for AI endpoints to make assistant UI respond instantly while
+	// testing locally. This is non-destructive and only active for matching paths.
+	try {
+		const parsed = new URL(url, location.href);
+		const p = parsed.pathname.toLowerCase();
+		if (p.includes('/api/ai') || p.includes('/api/chat') || p.includes('/api/generate') || parsed.hostname.includes('openai')) {
+			const canned = { ok: true, data: { message: 'This is a fast local mock response for testing.' } };
+			return Promise.resolve(new Response(JSON.stringify(canned), { status: 200, headers: { 'Content-Type': 'application/json' } }));
+		}
+	} catch (e) {
+		// ignore URL parse errors and continue to network
+	}
+
+	return originalFetch.apply(this, args)
+		.then(async response => {
+			const contentType = response.headers.get('Content-Type') || '';
+
+			// Exclude HTML document responses
+			const isDocumentResponse =
+				contentType.includes('text/html') ||
+				contentType.includes('application/xhtml+xml');
+
+			if (!response.ok && !isDocumentResponse) {
+					const responseClone = response.clone();
+					const errorFromRes = await responseClone.text();
+					const requestUrl = response.url;
+					console.error(`Fetch error from ${requestUrl}: ${errorFromRes}`);
+			}
+
+			return response;
+		})
+		.catch(error => {
+			if (!url.match(/.html?$/i)) {
+				console.error(error);
+			}
+
+			throw error;
+		});
+};
+</script>
+		<script>
+		// Global click interception to keep links/buttons functional before SPA hydration.
+		// This prevents full page reloads (which previously caused aborted module loads
+		// and a black screen in some environments) by using the History API for
+		// same-origin navigations and dispatching a popstate event so the SPA router
+		// can handle the navigation.
+		(function(){
+			document.addEventListener('click', (ev) => {
+				if (ev.defaultPrevented || ev.button !== 0 || ev.metaKey || ev.ctrlKey || ev.shiftKey || ev.altKey) return;
+				const el = ev.target && ev.target.closest ? ev.target.closest('a,button') : null;
+				if (!el) return;
+
+				if (el.tagName === 'A') {
+					try {
+						const u = new URL(el.href, location.href);
+						if (u.origin === location.origin) {
+							ev.preventDefault();
+							const href = u.pathname + u.search + u.hash;
+							if (href !== (location.pathname + location.search + location.hash)) {
+								history.pushState({}, '', href);
+								window.dispatchEvent(new PopStateEvent('popstate'));
+							}
+							return;
+						}
+					} catch (e) { return; }
+				}
+
+				if (el.tagName === 'BUTTON') {
+					ev.preventDefault();
+					const txt = (el.textContent || '').trim().toLowerCase();
+					if (txt.includes('get started')) {
+						const href = '/ai-tools';
+						history.pushState({}, '', href);
+						window.dispatchEvent(new PopStateEvent('popstate'));
+						return;
+					} else if (txt.includes('features')) {
+						const href = location.pathname + location.search + '#features';
+						history.pushState({}, '', href);
+						window.dispatchEvent(new PopStateEvent('popstate'));
+						return;
+					}
+				}
+			}, { capture: true });
+		})();
+		</script>
+    <script type="module">
+if (window.navigation && window.self !== window.top) {
+	window.navigation.addEventListener('navigate', (event) => {
+		const url = event.destination.url;
+
+		try {
+			const destinationUrl = new URL(url);
+			const destinationOrigin = destinationUrl.origin;
+			const currentOrigin = window.location.origin;
+
+			if (destinationOrigin === currentOrigin) {
+				return;
+			}
+		} catch (error) {
+			return;
+		}
+
+		window.parent.postMessage({
+			type: 'horizons-navigation-error',
+			url,
+		}, '*');
+	});
+}
+</script>
+  </head>
+  <body>
+		<div style="background:#0b69ff;color:#fff;padding:10px 16px;font-family:var(--ui-font);">
+			<div style="max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px">
+				<div style="font-weight:600">MRAZOTA</div>
+				<div>
+					<a href="/ai-tools/" style="color:#fff;background:rgba(255,255,255,0.08);padding:6px 10px;border-radius:6px;text-decoration:none;font-weight:600">AI Assistant</a>
+				</div>
+			</div>
+		</div>
+		<div id="root"></div>
+  </body>
+</html>
